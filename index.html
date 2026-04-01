@@ -3,41 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>카톡 공유하기</title>
+    <title>무진로지스틱 물류 알림</title>
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"></script>
 </head>
 <body style="display:flex; justify-content:center; align-items:center; height:100vh; background:#FEE500; margin:0;">
     <button onclick="shareKakao()" style="padding:20px; font-size:20px; font-weight:bold; background:#3C1E1E; color:white; border:none; border-radius:10px; cursor:pointer;">카카오톡 전송 🚀</button>
 
     <script>
-        // ★여기에 네 카카오 JavaScript 키 꼭 다시 넣어줘!★
+        // ★여기에 네 카카오 JavaScript 키 꼭 넣어줘!★
         Kakao.init('6912adc8e3ae065b07d5878286361fd7'); 
 
         function shareKakao() {
-            const urlParams = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams(window.location.search);
             
-            // 1. 앱시트에서 넘어온 텍스트 받기
-            let rawMessage = urlParams.get('text') || '전달된 내용이 없습니다.';
+            // 앱시트에서 보낸 개별 데이터 쪼개서 받기
+            const company = params.get('company') || '업체명 없음';
+            const type = params.get('type') || '입출고';
+            const method = params.get('method') || '작업방식';
+            const plt = params.get('plt') || '0';
+            const box = params.get('box') || '0';
+            const date = params.get('date') || '일자 없음';
+            const worker = params.get('worker') || '작업자 미상';
             
-            // 2. 핵심! 글자 '\n'을 진짜 줄바꿈(엔터)으로 강제 변환하기
-            let formattedMessage = rawMessage.replace(/\\n/g, '\n');
+            // 사진 URL 받기 (없으면 멋진 물류 트럭 기본 아이콘이 뜸!)
+            const imgUrl = params.get('img') || 'https://cdn-icons-png.flaticon.com/512/2765/2765089.png'; 
 
-            // 3. 텍스트형 -> 사진이 포함된 피드(feed)형으로 템플릿 업그레이드
+            // 영수증 스타일(itemContent)이 포함된 피드 전송
             Kakao.Share.sendDefault({
                 objectType: 'feed',
                 content: {
-                    title: '🚛 무진로지스틱 입고 알림', // 카톡 말풍선 굵은 제목
-                    description: formattedMessage, // 줄바꿈이 적용된 본문 내용
-                    // 아래는 상단에 뜰 이미지 URL (현재는 기본 박스 아이콘)
-                    imageUrl: 'https://cdn-icons-png.flaticon.com/512/2765/2765089.png', 
+                    title: `📦 [${type}] ${company} 작업 완료`, // 메인 굵은 제목
+                    description: `작업일자: ${date}\n담당자: ${worker}`, // 서브 설명
+                    imageUrl: imgUrl, // 사진
                     link: {
                         mobileWebUrl: 'https://www.appsheet.com',
                         webUrl: 'https://www.appsheet.com',
                     },
                 },
+                itemContent: {
+                    profileText: '3PL 한국무진로지스틱스',
+                    items: [
+                        { item: '작업구분', itemOp: type },
+                        { item: '작업방식', itemOp: method },
+                        { item: 'PLT수량', itemOp: plt + ' 파렛트' },
+                        { item: 'BOX수량', itemOp: box + ' 박스' }
+                    ]
+                },
                 buttons: [
                     {
-                        title: '모바일에서 확인하기',
+                        title: '시스템에서 상세 확인',
                         link: {
                             mobileWebUrl: 'https://www.appsheet.com',
                             webUrl: 'https://www.appsheet.com',
