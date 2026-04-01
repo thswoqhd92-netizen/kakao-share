@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카톡 공유하기</title>
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"></script>
+</head>
+<body style="display:flex; justify-content:center; align-items:center; height:100vh; background:#FEE500; margin:0;">
+    <button onclick="shareKakao()" style="padding:20px; font-size:20px; font-weight:bold; background:#3C1E1E; color:white; border:none; border-radius:10px; cursor:pointer;">카카오톡 전송 🚀</button>
+
+    <script>
+        // ★여기에 네 카카오 JavaScript 키(예: 6912adc...)를 꼭 넣어줘!★
+        Kakao.init('6912adc8e3ae065b07d5878286361fd7'); 
+
+        function shareKakao() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const message = urlParams.get('text') || '전달된 내용이 없습니다.';
+
+            Kakao.Share.sendDefault({
+                objectType: 'text',
+                text: message,
+                link: {
+                    mobileWebUrl: 'https://www.appsheet.com',
+                    webUrl: 'https://www.appsheet.com',
+                },
+            });
+        }
+    </script>
+</body>
+</html>
