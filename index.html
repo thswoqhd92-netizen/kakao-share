@@ -16,25 +16,28 @@
         function shareKakao() {
             const params = new URLSearchParams(window.location.search);
             
-            // 앱시트에서 보낸 개별 데이터 쪼개서 받기
-            const company = params.get('company') || '업체명 없음';
-            const type = params.get('type') || '입출고';
-            const method = params.get('method') || '작업방식';
-            const plt = params.get('plt') || '0';
-            const box = params.get('box') || '0';
-            const date = params.get('date') || '일자 없음';
-            const worker = params.get('worker') || '작업자 미상';
+            // 데이터가 없으면 모두 빈칸('')으로 처리
+            const company = params.get('company') || '';
+            const type = params.get('type') || '';
+            const method = params.get('method') || '';
+            const plt = params.get('plt') || '';
+            const box = params.get('box') || '';
+            const date = params.get('date') || '';
+            const worker = params.get('worker') || '';
             
-            // 사진 URL 받기 (없으면 멋진 물류 트럭 기본 아이콘이 뜸!)
+            // 사진 URL (사진은 아예 없으면 카톡 에러가 날 수 있어서 기본 트럭 아이콘 유지)
             const imgUrl = params.get('img') || 'https://cdn-icons-png.flaticon.com/512/2765/2765089.png'; 
 
-            // 영수증 스타일(itemContent)이 포함된 피드 전송
+            // 수량이 있을 때만 '파렛트/박스' 단위 붙이기 (빈칸 디테일)
+            const pltText = plt ? plt + ' 파렛트' : '';
+            const boxText = box ? box + ' 박스' : '';
+
             Kakao.Share.sendDefault({
                 objectType: 'feed',
                 content: {
-                    title: `📦 [${type}] ${company} 작업 완료`, // 메인 굵은 제목
-                    description: `작업일자: ${date}\n담당자: ${worker}`, // 서브 설명
-                    imageUrl: imgUrl, // 사진
+                    title: `📦 [${type}] ${company} 작업 완료`,
+                    description: `작업일자: ${date}\n담당자: ${worker}`,
+                    imageUrl: imgUrl,
                     link: {
                         mobileWebUrl: 'https://www.appsheet.com',
                         webUrl: 'https://www.appsheet.com',
@@ -45,8 +48,8 @@
                     items: [
                         { item: '작업구분', itemOp: type },
                         { item: '작업방식', itemOp: method },
-                        { item: 'PLT수량', itemOp: plt + ' 파렛트' },
-                        { item: 'BOX수량', itemOp: box + ' 박스' }
+                        { item: 'PLT수량', itemOp: pltText },
+                        { item: 'BOX수량', itemOp: boxText }
                     ]
                 },
                 buttons: [
