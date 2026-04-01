@@ -10,20 +10,40 @@
     <button onclick="shareKakao()" style="padding:20px; font-size:20px; font-weight:bold; background:#3C1E1E; color:white; border:none; border-radius:10px; cursor:pointer;">카카오톡 전송 🚀</button>
 
     <script>
-        // ★여기에 네 카카오 JavaScript 키(예: 6912adc...)를 꼭 넣어줘!★
+        // ★여기에 네 카카오 JavaScript 키 꼭 다시 넣어줘!★
         Kakao.init('6912adc8e3ae065b07d5878286361fd7'); 
 
         function shareKakao() {
             const urlParams = new URLSearchParams(window.location.search);
-            const message = urlParams.get('text') || '전달된 내용이 없습니다.';
+            
+            // 1. 앱시트에서 넘어온 텍스트 받기
+            let rawMessage = urlParams.get('text') || '전달된 내용이 없습니다.';
+            
+            // 2. 핵심! 글자 '\n'을 진짜 줄바꿈(엔터)으로 강제 변환하기
+            let formattedMessage = rawMessage.replace(/\\n/g, '\n');
 
+            // 3. 텍스트형 -> 사진이 포함된 피드(feed)형으로 템플릿 업그레이드
             Kakao.Share.sendDefault({
-                objectType: 'text',
-                text: message,
-                link: {
-                    mobileWebUrl: 'https://www.appsheet.com',
-                    webUrl: 'https://www.appsheet.com',
+                objectType: 'feed',
+                content: {
+                    title: '🚛 무진로지스틱 입고 알림', // 카톡 말풍선 굵은 제목
+                    description: formattedMessage, // 줄바꿈이 적용된 본문 내용
+                    // 아래는 상단에 뜰 이미지 URL (현재는 기본 박스 아이콘)
+                    imageUrl: 'https://cdn-icons-png.flaticon.com/512/2765/2765089.png', 
+                    link: {
+                        mobileWebUrl: 'https://www.appsheet.com',
+                        webUrl: 'https://www.appsheet.com',
+                    },
                 },
+                buttons: [
+                    {
+                        title: '모바일에서 확인하기',
+                        link: {
+                            mobileWebUrl: 'https://www.appsheet.com',
+                            webUrl: 'https://www.appsheet.com',
+                        },
+                    },
+                ],
             });
         }
     </script>
