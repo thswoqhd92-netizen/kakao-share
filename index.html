@@ -2,22 +2,21 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>카카오톡 공유</title>
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.6.0/kakao.min.js"></script>
 </head>
 <body style="display:flex; justify-content:center; align-items:center; height:100vh; background:#FEE500; margin:0;">
-    <button onclick="shareKakao()" style="padding:20px; font-size:20px; font-weight:bold; background:#3C1E1E; color:white; border:none; border-radius:10px; cursor:pointer;">
+    <button onclick="shareKakao()" style="padding:40px 60px; font-size:32px; font-weight:bold; background:#3C1E1E; color:white; border:none; border-radius:20px; cursor:pointer; width:90%; box-shadow: 0 10px 20px rgba(0,0,0,0.2);">
         카카오톡 전송 🚀
     </button>
 
     <script>
-        // 네 카카오 JavaScript 키
         Kakao.init('6912adc8e3ae065b07d5878286361fd7');
 
         function shareKakao() {
             const params = new URLSearchParams(window.location.search);
 
-            // URL에서 데이터 뽑아오기
             const type = params.get('type') || '';
             const method = params.get('method') || '';
             const plt = params.get('plt') || '0';
@@ -25,17 +24,18 @@
             const ea = params.get('ea') || '0'; 
             const date = params.get('date') || '';
             const worker = params.get('worker') || '';
-            
-            // 앱시트에서 보내준 아이콘 & 진짜 사진 링크 받기!
-            const imgUrl = params.get('img') || 'https://cdn-icons-png.flaticon.com/512/2765/2765089.png';
             const photoLink = params.get('link') || 'https://www.appsheet.com';
 
             Kakao.Share.sendDefault({
+                // 이미지가 없는 'itemContent' 중심의 피드 형식이야
                 objectType: 'feed',
                 content: {
                     title: `📢 [${type}] 작업 완료 📢`,
                     description: `담당자: ${worker}\n작업일자: ${date}`,
-                    imageUrl: imgUrl,
+                    // 이미지를 없애고 싶을 땐 imageUrl을 비우지 말고, 아주 작은 투명 이미지를 넣는 게 카톡 정책상 안전해
+                    imageUrl: 'https://cdn-icons-png.flaticon.com/512/10701/10701980.png', 
+                    imageWidth: 1,
+                    imageHeight: 1,
                     link: {
                         mobileWebUrl: photoLink,
                         webUrl: photoLink,
@@ -50,10 +50,10 @@
                         { item: '작업방식', itemOp: method }
                     ]
                 },
-                // 버튼 이름을 [📦 사진 보기]로 변경하고, 클릭 시 사진 링크로 연결!
+                // 버튼이 드디어 사진 보기로 고정된다!
                 buttons: [
                     {
-                        title: '[📦 사진 보기]',
+                        title: '📦 사진 보기',
                         link: {
                             mobileWebUrl: photoLink,
                             webUrl: photoLink,
@@ -62,6 +62,10 @@
                 ],
             });
         }
+        // 페이지 열리자마자 자동 실행
+        window.onload = function() {
+            setTimeout(shareKakao, 500); 
+        };
     </script>
 </body>
 </html>
