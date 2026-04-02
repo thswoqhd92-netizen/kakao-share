@@ -24,18 +24,14 @@
             const date = params.get('date') || '';
             const worker = params.get('worker') || '';
             
+            // 앱시트에서 보낸 실제 사진 주소
             let photoLink = params.get('link');
             if (photoLink) photoLink = decodeURIComponent(photoLink);
             else photoLink = 'https://www.appsheet.com';
 
             Kakao.Share.sendDefault({
                 objectType: 'feed',
-                content: {
-                    title: `📢 [${type}] 작업 완료 📢`,
-                    description: `담당자: ${worker}\n작업일자: ${date}`,
-                    imageUrl: photoLink, // 여기에 찍은 사진이 나옴
-                    link: { mobileWebUrl: photoLink, webUrl: photoLink },
-                },
+                // 1. 상단 항목 리스트 (사진 속 레이아웃)
                 itemContent: {
                     profileText: '[3PL 입&출고 알림]', 
                     items: [
@@ -45,10 +41,24 @@
                         { item: '작업방식', itemOp: method }
                     ]
                 },
+                // 2. 중간 제목 및 설명
+                content: {
+                    title: `📢 [${type}] 작업 완료 📢`,
+                    description: `담당자: ${worker}\n작업일자: ${date}`,
+                    imageUrl: photoLink, // 여기에 촬영한 사진이 바로 뜸
+                    link: {
+                        mobileWebUrl: photoLink,
+                        webUrl: photoLink,
+                    },
+                },
+                // 3. 하단 사진 보기 버튼 (드디어 부활!)
                 buttons: [
                     {
                         title: '📦 사진 보기',
-                        link: { mobileWebUrl: photoLink, webUrl: photoLink },
+                        link: {
+                            mobileWebUrl: photoLink,
+                            webUrl: photoLink,
+                        },
                     },
                 ],
             });
