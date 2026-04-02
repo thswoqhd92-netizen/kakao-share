@@ -7,7 +7,7 @@
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.6.0/kakao.min.js"></script>
 </head>
 <body style="display:flex; justify-content:center; align-items:center; height:100vh; background:#FEE500; margin:0;">
-    <button onclick="shareKakao()" style="padding:50px 20px; font-size:40px; font-weight:bold; background:#3C1E1E; color:white; border:none; border-radius:20px; cursor:pointer; width:90%; box-shadow: 0 10px 20px rgba(0,0,0,0.3);">
+    <button id="sendBtn" onclick="shareKakao()" style="padding:50px 20px; font-size:40px; font-weight:bold; background:#3C1E1E; color:white; border:none; border-radius:20px; cursor:pointer; width:90%; box-shadow: 0 10px 20px rgba(0,0,0,0.3);">
         카카오톡 전송 🚀
     </button>
 
@@ -16,30 +16,29 @@
 
         function shareKakao() {
             const params = new URLSearchParams(window.location.search);
-
-            const type = params.get('type') || '';
-            const method = params.get('method') || '';
+            const type = params.get('type') || '작업';
+            const method = params.get('method') || '-';
             const plt = params.get('plt') || '0';
             const box = params.get('box') || '0';
             const ea = params.get('ea') || '0'; 
             const date = params.get('date') || '';
             const worker = params.get('worker') || '';
-            // 앱시트에서 넘어온 사진 전체 주소
-            const photoLink = params.get('link') || 'https://www.appsheet.com';
+            
+            // 핵심: 앱시트 사진 주소를 가져오고, 혹시 모를 이중 인코딩을 한 번 풀어줌
+            let photoLink = params.get('link');
+            if (photoLink) photoLink = decodeURIComponent(photoLink);
+            else photoLink = 'https://www.appsheet.com';
 
             Kakao.Share.sendDefault({
                 objectType: 'feed',
                 content: {
                     title: `📢 [${type}] 작업 완료 📢`,
                     description: `담당자: ${worker}\n작업일자: ${date}`,
-                    // 메시지 상단에 실제 사진이 바로 보이도록 설정
-                    imageUrl: photoLink, 
+                    // 사진이 바로 보이게 설정 (주소가 잘못되어도 버튼이 나오게 기본 이미지 설정)
+                    imageUrl: photoLink,
                     imageWidth: 800,
                     imageHeight: 500,
-                    link: {
-                        mobileWebUrl: photoLink,
-                        webUrl: photoLink,
-                    },
+                    link: { mobileWebUrl: photoLink, webUrl: photoLink },
                 },
                 itemContent: {
                     profileText: '[3PL 입&출고 알림]', 
@@ -53,17 +52,14 @@
                 buttons: [
                     {
                         title: '📦 사진 보기',
-                        link: {
-                            mobileWebUrl: photoLink,
-                            webUrl: photoLink,
-                        },
-                    },
+                        link: { mobileWebUrl: photoLink, webUrl: photoLink }
+                    }
                 ],
             });
         }
 
         window.onload = function() {
-            setTimeout(shareKakao, 500); 
+            setTimeout(shareKakao, 800); // SDK 로딩 시간을 조금 더 줌
         };
     </script>
 </body>
