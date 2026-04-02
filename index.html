@@ -2,41 +2,39 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>무진로지스틱 물류 알림</title>
-    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"></script>
+    <title>카카오톡 공유</title>
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.6.0/kakao.min.js"></script>
 </head>
 <body style="display:flex; justify-content:center; align-items:center; height:100vh; background:#FEE500; margin:0;">
-    <button onclick="shareKakao()" style="padding:20px; font-size:20px; font-weight:bold; background:#3C1E1E; color:white; border:none; border-radius:10px; cursor:pointer;">카카오톡 전송 🚀</button>
+    <button onclick="shareKakao()" style="padding:20px; font-size:20px; font-weight:bold; background:#3C1E1E; color:white; border:none; border-radius:10px; cursor:pointer;">
+        카카오톡 전송 중...
+    </button>
 
     <script>
-        // ★여기에 네 카카오 JavaScript 키 꼭 넣어줘!★
-        Kakao.init('여기에_너의_자바스크립트_키를_넣어주세요'); 
+        // 1. 네 카카오 JavaScript 키 초기화 (이전 사진에서 복구함)
+        Kakao.init('6912adc8e3ae065b07d5878286361fd7');
 
+        // 2. 카카오톡 보내는 핵심 기능
         function shareKakao() {
             const params = new URLSearchParams(window.location.search);
-            
-            // 데이터가 없으면 모두 빈칸('')으로 처리
-            const company = params.get('company') || '';
+
+            // 앱시트 URL에서 데이터 뽑아오기
             const type = params.get('type') || '';
             const method = params.get('method') || '';
-            const plt = params.get('plt') || '';
-            const box = params.get('box') || '';
+            const plt = params.get('plt') || '0';
+            const box = params.get('box') || '0';
+            const ea = params.get('ea') || '0'; // 낱개 추가
             const date = params.get('date') || '';
             const worker = params.get('worker') || '';
             
-            // 사진 URL (사진은 아예 없으면 카톡 에러가 날 수 있어서 기본 트럭 아이콘 유지)
-            const imgUrl = params.get('img') || 'https://cdn-icons-png.flaticon.com/512/2765/2765089.png'; 
-
-            // 수량이 있을 때만 '파렛트/박스' 단위 붙이기 (빈칸 디테일)
-            const pltText = plt ? plt + ' 파렛트' : '';
-            const boxText = box ? box + ' 박스' : '';
+            // 사진 URL (없으면 기본 아이콘)
+            const imgUrl = params.get('img') || 'https://cdn-icons-png.flaticon.com/512/2765/2765089.png';
 
             Kakao.Share.sendDefault({
                 objectType: 'feed',
                 content: {
-                    title: `📦 [${type}] ${company} 작업 완료`,
-                    description: `작업일자: ${date}\n담당자: ${worker}`,
+                    title: `* [${type}] 작업 완료`,
+                    description: `작업일자: ${date}`, // 글 안 잘리게 일자는 여기로 뺌
                     imageUrl: imgUrl,
                     link: {
                         mobileWebUrl: 'https://www.appsheet.com',
@@ -44,17 +42,18 @@
                     },
                 },
                 itemContent: {
-                    profileText: '3PL 한국무진로지스틱스',
+                    profileText: '[입&출고 알림]', // 맨 위 타이틀 수정
                     items: [
-                        { item: '작업구분', itemOp: type },
+                        { item: 'PLT', itemOp: plt },
+                        { item: 'BOX', itemOp: box },
+                        { item: '낱개', itemOp: ea },
                         { item: '작업방식', itemOp: method },
-                        { item: 'PLT수량', itemOp: pltText },
-                        { item: 'BOX수량', itemOp: boxText }
+                        { item: '담당자', itemOp: worker }
                     ]
                 },
                 buttons: [
                     {
-                        title: '시스템에서 상세 확인',
+                        title: '모바일에서 확인해주세요.',
                         link: {
                             mobileWebUrl: 'https://www.appsheet.com',
                             webUrl: 'https://www.appsheet.com',
@@ -63,6 +62,11 @@
                 ],
             });
         }
+
+        // 3. 페이지가 열리면 자동으로 버튼을 누른 것처럼 실행되게 만들기
+        window.onload = function() {
+            shareKakao();
+        };
     </script>
 </body>
 </html>
