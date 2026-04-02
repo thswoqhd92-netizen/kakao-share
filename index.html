@@ -11,13 +11,11 @@
     </button>
 
     <script>
-        // 네 카카오 JavaScript 키
         Kakao.init('6912adc8e3ae065b07d5878286361fd7');
 
         function shareKakao() {
             const params = new URLSearchParams(window.location.search);
 
-            // URL에서 데이터 뽑아오기
             const type = params.get('type') || '';
             const method = params.get('method') || '';
             const plt = params.get('plt') || '0';
@@ -31,7 +29,8 @@
             Kakao.Share.sendDefault({
                 objectType: 'feed',
                 content: {
-                    title: `* [${type}] 작업 완료`,
+                    // 가독성을 위해 확 눈에 띄는 이모지 추가!
+                    title: `📢 [${type}] 작업 완료 📢`,
                     description: `담당자: ${worker}\n작업일자: ${date}`,
                     imageUrl: imgUrl,
                     link: {
@@ -47,8 +46,17 @@
                         { item: '낱개', itemOp: ea },
                         { item: '작업방식', itemOp: method }
                     ]
-                }
-                // 불필요한 buttons 배열은 완전히 삭제했어!
+                },
+                // 못 지우는 버튼이라면, 텍스트를 간지나게 변경!
+                buttons: [
+                    {
+                        title: '📦 무진로지스틱스 시스템 열기',
+                        link: {
+                            mobileWebUrl: 'https://www.appsheet.com',
+                            webUrl: 'https://www.appsheet.com',
+                        },
+                    },
+                ],
             });
         }
     </script>
