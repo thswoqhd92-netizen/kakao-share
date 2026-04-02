@@ -32,7 +32,6 @@
                 objectType: 'feed',
                 content: {
                     title: `* [${type}] 작업 완료`,
-                    // 긴 이메일 주소(담당자)와 작업일자는 글자수 제한이 없는 곳으로 이동
                     description: `담당자: ${worker}\n작업일자: ${date}`,
                     imageUrl: imgUrl,
                     link: {
@@ -41,23 +40,15 @@
                     },
                 },
                 itemContent: {
-                    profileText: '[입&출고 알림]', 
+                    profileText: '[3PL 입&출고 알림]', 
                     items: [
                         { item: 'PLT', itemOp: plt },
                         { item: 'BOX', itemOp: box },
                         { item: '낱개', itemOp: ea },
                         { item: '작업방식', itemOp: method }
                     ]
-                },
-                buttons: [
-                    {
-                        title: '모바일에서 확인해주세요.',
-                        link: {
-                            mobileWebUrl: 'https://www.appsheet.com',
-                            webUrl: 'https://www.appsheet.com',
-                        },
-                    },
-                ],
+                }
+                // 불필요한 buttons 배열은 완전히 삭제했어!
             });
         }
     </script>
