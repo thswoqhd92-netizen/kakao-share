@@ -7,7 +7,7 @@
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.6.0/kakao.min.js"></script>
 </head>
 <body style="display:flex; justify-content:center; align-items:center; height:100vh; background:#FEE500; margin:0;">
-    <button onclick="shareKakao()" style="padding:40px 60px; font-size:32px; font-weight:bold; background:#3C1E1E; color:white; border:none; border-radius:20px; cursor:pointer; width:90%; box-shadow: 0 10px 20px rgba(0,0,0,0.2);">
+    <button onclick="shareKakao()" style="padding:50px 20px; font-size:40px; font-weight:bold; background:#3C1E1E; color:white; border:none; border-radius:20px; cursor:pointer; width:90%; box-shadow: 0 10px 20px rgba(0,0,0,0.3);">
         카카오톡 전송 🚀
     </button>
 
@@ -27,15 +27,12 @@
             const photoLink = params.get('link') || 'https://www.appsheet.com';
 
             Kakao.Share.sendDefault({
-                // 이미지가 없는 'itemContent' 중심의 피드 형식이야
                 objectType: 'feed',
                 content: {
                     title: `📢 [${type}] 작업 완료 📢`,
                     description: `담당자: ${worker}\n작업일자: ${date}`,
-                    // 이미지를 없애고 싶을 땐 imageUrl을 비우지 말고, 아주 작은 투명 이미지를 넣는 게 카톡 정책상 안전해
-                    imageUrl: 'https://cdn-icons-png.flaticon.com/512/10701/10701980.png', 
-                    imageWidth: 1,
-                    imageHeight: 1,
+                    // 1. 이상한 사진 안 나오게 처리: imageUrl을 빈 값으로 두거나 투명 이미지 사용
+                    imageUrl: '', 
                     link: {
                         mobileWebUrl: photoLink,
                         webUrl: photoLink,
@@ -50,9 +47,9 @@
                         { item: '작업방식', itemOp: method }
                     ]
                 },
-                // 버튼이 드디어 사진 보기로 고정된다!
                 buttons: [
                     {
+                        // 2. 사진 보기 기능: 앱시트 사진 URL로 바로 연결
                         title: '📦 사진 보기',
                         link: {
                             mobileWebUrl: photoLink,
@@ -62,7 +59,7 @@
                 ],
             });
         }
-        // 페이지 열리자마자 자동 실행
+
         window.onload = function() {
             setTimeout(shareKakao, 500); 
         };
