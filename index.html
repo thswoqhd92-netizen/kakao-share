@@ -24,6 +24,7 @@
             const ea = params.get('ea') || '0'; 
             const date = params.get('date') || '';
             const worker = params.get('worker') || '';
+            // 앱시트에서 넘어온 사진 전체 주소
             const photoLink = params.get('link') || 'https://www.appsheet.com';
 
             Kakao.Share.sendDefault({
@@ -31,10 +32,10 @@
                 content: {
                     title: `📢 [${type}] 작업 완료 📢`,
                     description: `담당자: ${worker}\n작업일자: ${date}`,
-                    // 1. 이상한 사진 안 나오게 처리: imageUrl을 빈 값으로 두거나 투명 이미지 사용
-                    imageUrl: 'photoLink', 
+                    // 메시지 상단에 실제 사진이 바로 보이도록 설정
+                    imageUrl: photoLink, 
                     imageWidth: 800,
-                    imageHeight: 400,
+                    imageHeight: 500,
                     link: {
                         mobileWebUrl: photoLink,
                         webUrl: photoLink,
@@ -51,7 +52,6 @@
                 },
                 buttons: [
                     {
-                        // 2. 사진 보기 기능: 앱시트 사진 URL로 바로 연결
                         title: '📦 사진 보기',
                         link: {
                             mobileWebUrl: photoLink,
