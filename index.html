@@ -7,34 +7,33 @@
 </head>
 <body style="display:flex; justify-content:center; align-items:center; height:100vh; background:#FEE500; margin:0;">
     <button onclick="shareKakao()" style="padding:20px; font-size:20px; font-weight:bold; background:#3C1E1E; color:white; border:none; border-radius:10px; cursor:pointer;">
-        카카오톡 전송 중...
+        카카오톡 전송 🚀
     </button>
 
     <script>
-        // 1. 네 카카오 JavaScript 키 초기화 (이전 사진에서 복구함)
+        // 네 카카오 JavaScript 키
         Kakao.init('6912adc8e3ae065b07d5878286361fd7');
 
-        // 2. 카카오톡 보내는 핵심 기능
         function shareKakao() {
             const params = new URLSearchParams(window.location.search);
 
-            // 앱시트 URL에서 데이터 뽑아오기
+            // URL에서 데이터 뽑아오기
             const type = params.get('type') || '';
             const method = params.get('method') || '';
             const plt = params.get('plt') || '0';
             const box = params.get('box') || '0';
-            const ea = params.get('ea') || '0'; // 낱개 추가
+            const ea = params.get('ea') || '0'; 
             const date = params.get('date') || '';
             const worker = params.get('worker') || '';
             
-            // 사진 URL (없으면 기본 아이콘)
             const imgUrl = params.get('img') || 'https://cdn-icons-png.flaticon.com/512/2765/2765089.png';
 
             Kakao.Share.sendDefault({
                 objectType: 'feed',
                 content: {
                     title: `* [${type}] 작업 완료`,
-                    description: `작업일자: ${date}`, // 글 안 잘리게 일자는 여기로 뺌
+                    // 긴 이메일 주소(담당자)와 작업일자는 글자수 제한이 없는 곳으로 이동
+                    description: `담당자: ${worker}\n작업일자: ${date}`,
                     imageUrl: imgUrl,
                     link: {
                         mobileWebUrl: 'https://www.appsheet.com',
@@ -42,13 +41,12 @@
                     },
                 },
                 itemContent: {
-                    profileText: '[입&출고 알림]', // 맨 위 타이틀 수정
+                    profileText: '[입&출고 알림]', 
                     items: [
                         { item: 'PLT', itemOp: plt },
                         { item: 'BOX', itemOp: box },
                         { item: '낱개', itemOp: ea },
-                        { item: '작업방식', itemOp: method },
-                        { item: '담당자', itemOp: worker }
+                        { item: '작업방식', itemOp: method }
                     ]
                 },
                 buttons: [
@@ -62,11 +60,6 @@
                 ],
             });
         }
-
-        // 3. 페이지가 열리면 자동으로 버튼을 누른 것처럼 실행되게 만들기
-        window.onload = function() {
-            shareKakao();
-        };
     </script>
 </body>
 </html>
