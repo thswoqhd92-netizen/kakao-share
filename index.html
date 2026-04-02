@@ -7,7 +7,7 @@
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.6.0/kakao.min.js"></script>
 </head>
 <body style="display:flex; justify-content:center; align-items:center; height:100vh; background:#FEE500; margin:0;">
-    <button onclick="shareKakao()" style="padding:50px 20px; font-size:40px; font-weight:bold; background:#3C1E1E; color:white; border:none; border-radius:20px; cursor:pointer; width:90%;">
+    <button onclick="shareKakao()" style="padding:50px 20px; font-size:40px; font-weight:bold; background:#3C1E1E; color:white; border:none; border-radius:20px; cursor:pointer; width:90%; box-shadow: 0 10px 20px rgba(0,0,0,0.3);">
         카카오톡 전송 🚀
     </button>
 
@@ -16,37 +16,48 @@
 
         function shareKakao() {
             const params = new URLSearchParams(window.location.search);
-            const type = params.get('type') || '작업';
-            const worker = params.get('worker') || '담당자';
-            const date = params.get('date') || '';
+
+            const type = params.get('type') || '';
+            const method = params.get('method') || '';
             const plt = params.get('plt') || '0';
             const box = params.get('box') || '0';
-            const ea = params.get('ea') || '0';
-            const method = params.get('method') || '-';
-            
-            // 사진 링크가 깨져도 버튼은 나오게 처리
-            let photoLink = params.get('link');
-            if (photoLink) {
-                photoLink = decodeURIComponent(photoLink);
-            } else {
-                photoLink = 'https://www.appsheet.com';
-            }
+            const ea = params.get('ea') || '0'; 
+            const date = params.get('date') || '';
+            const worker = params.get('worker') || '';
+            const photoLink = params.get('link') || 'https://www.appsheet.com';
 
-            // 'feed' 대신 'text' 형식을 섞어서 안정성을 높임
             Kakao.Share.sendDefault({
                 objectType: 'feed',
                 content: {
-                    title: `📢 [${type}] 작업 완료`,
-                    description: `PLT: ${plt} / BOX: ${box} / 낱개: ${ea}\n방식: ${method}\n담당: ${worker}\n일시: ${date}`,
-                    // 이미지가 있으면 나오고, 없으면 아래 기본 로고가 나옴
-                    imageUrl: photoLink,
-                    link: { mobileWebUrl: photoLink, webUrl: photoLink }
+                    title: `📢 [${type}] 작업 완료 📢`,
+                    description: `담당자: ${worker}\n작업일자: ${date}`,
+                    // 1. 이상한 사진 안 나오게 처리: imageUrl을 빈 값으로 두거나 투명 이미지 사용
+                    imageUrl: 'photoLink', 
+                    imageWidth: 800,
+                    imageHeight: 400,
+                    link: {
+                        mobileWebUrl: photoLink,
+                        webUrl: photoLink,
+                    },
+                },
+                itemContent: {
+                    profileText: '[3PL 입&출고 알림]', 
+                    items: [
+                        { item: 'PLT', itemOp: plt },
+                        { item: 'BOX', itemOp: box },
+                        { item: '낱개', itemOp: ea },
+                        { item: '작업방식', itemOp: method }
+                    ]
                 },
                 buttons: [
                     {
-                        title: '📦 실제 사진 보기',
-                        link: { mobileWebUrl: photoLink, webUrl: photoLink }
-                    }
+                        // 2. 사진 보기 기능: 앱시트 사진 URL로 바로 연결
+                        title: '📦 사진 보기',
+                        link: {
+                            mobileWebUrl: photoLink,
+                            webUrl: photoLink,
+                        },
+                    },
                 ],
             });
         }
