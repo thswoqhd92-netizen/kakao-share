@@ -19,8 +19,8 @@
             const type = params.get('type') || '';
             const method = params.get('method') || '-';
             const plt = params.get('plt') || '0';
-            const plt_box = params.get('plt_box') || '0'; // 추가
-            const mixed_plt = params.get('mixed_plt') || '0'; // 추가
+            const plt_box = params.get('plt_box') || '0'; 
+            const mixed_plt = params.get('mixed_plt') || '0'; 
             const box = params.get('box') || '0'; 
             const date = params.get('date') || '';
             const worker = params.get('worker') || '';
@@ -34,10 +34,10 @@
                 itemContent: {
                     profileText: '[3PL 입&출고 알림]', 
                     items: [
-                        { item: 'PLT 수량', itemOp: plt },
-                        { item: 'PLT 내 박스수량', itemOp: plt_box },
-                        { item: '혼적 PLT 수량', itemOp: mixed_plt },
-                        { item: 'BOX 수량', itemOp: box },
+                        { item: 'PLT', itemOp: plt },
+                        { item: 'PLT내박스', itemOp: plt_box }, // 글자 수 압축 (짤림 방지)
+                        { item: '혼적PLT', itemOp: mixed_plt },  // 글자 수 압축 (짤림 방지)
+                        { item: 'BOX', itemOp: box },
                         { item: '작업방식', itemOp: method }
                     ]
                 },
